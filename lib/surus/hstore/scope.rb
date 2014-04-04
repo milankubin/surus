@@ -1,6 +1,20 @@
 module Surus
   module Hstore
     module Scope
+      
+       #scope :where_all, ->(column, key, value) { 
+       
+      def hstore_array_has_any(column, key, value)
+       # where("#{connection.quote_column_name(column)} ?& ARRAY[:keys]", :keys => keys.flatten)
+        where("? = ALL (SELECT unnest(\"#{connection.quote_column_name(column)}\") @> ?)", value, key)
+      end
+      
+      
+   #   def hstore_has_any_keys(column, *keys)
+    #    where("#{connection.quote_column_name(column)} ?| ARRAY[:keys]", :keys => keys.flatten)
+    #  end
+      
+      
       # Adds a where condition that requires column to contain hash
       #
       # Example:
