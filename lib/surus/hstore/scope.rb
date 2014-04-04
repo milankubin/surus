@@ -6,7 +6,7 @@ module Surus
        
       def hstore_array_has_any(column, key, value)
        # where("#{connection.quote_column_name(column)} ?& ARRAY[:keys]", :keys => keys.flatten)
-        where(" (SELECT unnest(#{connection.quote_column_name(column)})   AS item WHERE(#{connection.quote_column_name(column)} @> \"#{key}=>#{value}\") )  ")
+        where(" (SELECT unnest(#{connection.quote_column_name(column)})   AS item WHERE(#{connection.quote_column_name(column)} @> \"$$#{key}=>#{value}$$::hstore\") )  ")
       end
       
       
