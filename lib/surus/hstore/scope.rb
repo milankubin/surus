@@ -4,9 +4,9 @@ module Surus
       
        #scope :where_all, ->(column, key, value) { 
        
-      def hstore_array_has_any(column, key, value)
+      def hstore_array_has_any(column, value)
        # where("#{connection.quote_column_name(column)} ?& ARRAY[:keys]", :keys => keys.flatten)
-        where(" (SELECT unnest(#{connection.quote_column_name(column)})   AS item WHERE(#{connection.quote_column_name(column)} @> \"$$#{key}=>#{value}$$::hstore\") )  ")
+        where("WHERE exists ( select * from  (SELECT svals(unnest(#{connection.quote_column_name(column}) ) )  x(item) where x.item LIKE '%?%') ", value)
       end
       
       
