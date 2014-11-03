@@ -22,6 +22,10 @@ module Surus
         where("#{connection.quote_column_name(column)} @> ?", Serializer.new.dump(hash))
       end
       
+      def hstore_array_has_pairs(column, hash)
+        where(" exists (  SELECT * FROM  ( SELECT  hstore(unnest(#{connection.quote_column_name(column)})))  x(item)  WHERE x.item  @> ?)", Serializer.new.dump(hash) );
+      end
+      
       # Adds a where condition that requires column to contain key
       #
       # Example:
